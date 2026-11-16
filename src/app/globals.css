@@ -1,26 +1,124 @@
 @import "tailwindcss";
+@config "../../tailwind.config.ts";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-cream: #fff9f0;
+  --color-cream-deep: #fff1de;
+  --color-ink: #2b1b17;
+  --color-ink-soft: #5c4038;
+  --color-pink: #f4b8c6;
+  --color-pink-deep: #e38aa0;
+  --color-blush: #ffe4ec;
+  --color-sky: #c9dff6;
+  --color-sky-deep: #a7c7ee;
+  --color-sage: #c5d5b8;
+  --color-sage-deep: #9bb892;
+  --color-butter: #ffe6b5;
+  --color-lilac: #e6d4f5;
+  --color-peach: #ffd5c2;
+  --color-mint: #d4efe4;
+  --color-lime: #e8f1b9;
+  --font-display: var(--font-fredoka), "Fredoka", sans-serif;
+  --font-sans: var(--font-nunito), "Nunito", sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-cream);
+  color: var(--color-ink);
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--color-pink);
+  color: var(--color-ink);
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-pink-deep);
+  outline-offset: 3px;
+}
+
+section[id] {
+  scroll-margin-top: calc(4rem + 1px);
+}
+
+@media (min-width: 768px) {
+  section[id] {
+    scroll-margin-top: calc(4.5rem + 1px);
+  }
+}
+
+@keyframes wave-drift {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-wave {
+  animation: wave-drift 18s linear infinite;
+}
+
+@keyframes spark-fade {
+  to {
+    opacity: 0;
+    transform: translateY(-14px) scale(0.4);
+  }
+}
+
+.spark {
+  position: fixed;
+  z-index: 30;
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  margin-top: -5px;
+  pointer-events: none;
+  background: var(--spark, #ffe6b5);
+  clip-path: polygon(
+    50% 0%,
+    62% 38%,
+    100% 50%,
+    62% 62%,
+    50% 100%,
+    38% 62%,
+    0% 50%,
+    38% 38%
+  );
+  animation: spark-fade 700ms ease-out forwards;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .zoom-media {
+    transition: transform 500ms ease;
+  }
+
+  .group:hover .zoom-media {
+    transform: scale(1.05);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .animate-wave,
+  .spark {
+    animation: none;
+  }
+
+  .spark {
+    display: none;
+  }
+
+  .motion-fx {
+    transform: none !important;
+  }
 }

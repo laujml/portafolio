@@ -1,0 +1,92 @@
+{
+  "nav": {
+    "about": "About",
+    "stack": "Tech stack",
+    "projects": "Projects",
+    "events": "Events",
+    "writing": "Writing",
+    "open": "Open menu",
+    "close": "Close menu",
+    "primary": "Primary",
+    "home": "Lau, home"
+  },
+  "hero": {
+    "intro": "Most of my work is full-stack web development: I like taking an idea from the database to a clean, friendly interface. I also enjoy automating things with AI, and I'm learning more about cybersecurity so I can build apps that are secure from the start.",
+    "seeProjects": "See projects",
+    "downloadCv": "Download CV",
+    "cvHref": "/cv/Laura_Angel_CV_EN.pdf",
+    "cvFileName": "Laura_Angel_CV_EN.pdf"
+  },
+  "sections": {
+    "about": "About me",
+    "stack": "Tech stack",
+    "projects": "Projects",
+    "events": "Events that helped me grow",
+    "writing": "Writing and threads"
+  },
+  "projects": {
+    "viewDetails": "View details",
+    "back": "Back to projects",
+    "github": "View on GitHub",
+    "code": "Code",
+    "repository": "View repository",
+    "apk": "Download APK",
+    "about": "About this project",
+    "features": "Features",
+    "stack": "Tech stack used",
+    "demo": "View demo",
+    "previousProjects": "Previous projects",
+    "nextProjects": "Next projects",
+    "carousel": "Project carousel",
+    "play": "Play video",
+    "videoMissing": "This video is not available yet.",
+    "gallery": "Screenshots",
+    "close": "Close gallery",
+    "previous": "Previous screenshot",
+    "next": "Next screenshot",
+    "dialog": "Screenshot gallery",
+    "inProgress": "In progress"
+  },
+  "events": {
+    "readThread": "Read my thread",
+    "virtual": "Virtual",
+    "inPerson": "In person",
+    "organizedBy": "Organized by {name}",
+    "previous": "Previous events",
+    "next": "Next events",
+    "carousel": "Event carousel",
+    "courses": "Courses and certifications"
+  },
+  "writing": {
+    "read": "Read on X"
+  },
+  "about": {
+    "paragraphs": [
+      "I'm Laura, but everyone calls me Lau. I'm finishing my degree in Software Engineering and Digital Business at ESEN, and I currently work as a full-stack software engineer, building web platforms from the backend to the interface.",
+      "I got into tech because I liked the idea of solving real problems with code, and the business side of my degree taught me to always ask who is going to use what I build. That's why I care as much about a clean interface as I do about a solid backend.",
+      "Outside of work I'm Campus Lead for Ai Labs at my university, helping organize tech events in El Salvador. I also write short threads on X explaining AI agents and security in the simplest way I can.",
+      "If you want to build something together or just talk tech, write to me."
+    ]
+  },
+  "contact": {
+    "write": "Write me"
+  },
+  "footer": {
+    "credit": "Lau, 2026"
+  },
+  "meta": {
+    "title": "Lau | Portfolio",
+    "description": "Portfolio of Lau (Laura Angel), full-stack developer and software engineering student from El Salvador.",
+    "ogAlt": "Lau, software engineering student and full-stack developer"
+  },
+  "a11y": {
+    "skip": "Skip to content",
+    "language": "Language",
+    "social": "Social media"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "This page is not part of the portfolio.",
+    "home": "Back home"
+  }
+}

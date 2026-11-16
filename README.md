@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Portafolio de Lau
 
-## Getting Started
+Sitio personal en Next.js, bilingüe (inglés por defecto y español), listo para Vercel.
 
-First, run the development server:
+## Desarrollo
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abre [http://localhost:3000](http://localhost:3000). La raíz redirige a `/en`. El español vive en `/es`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Contenido
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Los textos del sitio están en `src/data`. Los botones y títulos de sección están en `src/messages/en.json` y `src/messages/es.json`.
 
-## Learn More
+### Agregar un proyecto
 
-To learn more about Next.js, take a look at the following resources:
+1. Crea la carpeta `public/projects/<slug>/`.
+2. Agrega `thumbnail.png` y las capturas (`screen-1.png`, `screen-2.png`, …).
+3. Si hay video, agrega `demo.mp4` y `poster.png`.
+4. Añade un objeto al arreglo `projects` en `src/data/projects.ts`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+No hace falta tocar componentes. Los campos son: `slug`, `title`, `tagline`, `categoryId`, `category`, `date`, `tech`, `thumbnail`, `thumbnailAlt`, `video` (opcional), `screenshots`, `demo` (opcional), `github` (opcional), `apk` (opcional), `about` y `features`. Donde el texto cambia por idioma, usa `{ en, es }`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+`demo`, `github` y `apk` solo se muestran si el valor empieza por `http://` o `https://`. El reproductor solo aparece si el proyecto tiene `video`. Los repos van bajo `https://github.com/laujml`: deja `github` vacío, con un comentario TODO, hasta confirmar el nombre del repositorio. `categoryId` elige el color de la categoría (`backend`, `frontend`, `fullstack`, `personal`, `academic`, `cybersecurity`, `unconfirmed`).
 
-## Deploy on Vercel
+### Agregar un evento
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Agrega la foto en `public/events/<slug>.png`.
+2. Añade un objeto en el arreglo `events` de `src/data/events.ts` con `slug`, `name`, `format` (`inPerson` o `virtual`), `date`, `image` y `alt`. `place`, `organizer`, `note` y `thread` son opcionales: si faltan, esa línea o ese botón no se muestra.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Los cursos viven en el arreglo `courses` del mismo archivo (`slug`, `name`, `date`).
+
+### Agregar un hilo
+
+Añade un objeto en `src/data/writing.ts` con `slug`, `title` (`{ en, es }`) y `href`. Si omites `href`, la tarjeta se muestra atenuada y sin enlace.
+
+### Reemplazar imágenes y el CV
+
+| Archivo | Qué es |
+| --- | --- |
+| `public/images/avatar.png` | Ilustración del hero, cuadrada, con su propio fondo crema. |
+| `public/cv/Laura-Angel-CV-en.pdf` | CV en inglés |
+| `public/cv/Laura-Angel-CV-es.pdf` | CV en español |
+| `public/projects/<slug>/` | Portada, capturas, póster y video |
+| `public/events/<slug>.png` | Foto del evento |
+
+El texto alternativo de la ilustración está en `src/data/profile.ts` (`portraitAlt`). Las frases de “Sobre mí” y el correo también viven ahí. Las URLs de LinkedIn, GitHub y X están solo en `src/data/socials.ts`.
+
+Si una imagen no existe, la tarjeta muestra una flor y no se rompe el diseño.
+
+## Despliegue en Vercel
+
+1. Sube el repositorio a GitHub.
+2. En Vercel, importa el proyecto. El framework es Next.js.
+3. Define la variable `NEXT_PUBLIC_SITE_URL` con la URL pública, por ejemplo `https://tu-dominio.vercel.app`.
+4. Deploy.
+
+Esa variable alimenta el sitemap, `robots.txt` y Open Graph. Sin ella, el build usa `http://localhost:3000`.
