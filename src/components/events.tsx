@@ -5,6 +5,7 @@ import { Reveal } from "@/components/reveal";
 import { SafeImage } from "@/components/safe-image";
 import { courses, events, type PortfolioEvent } from "@/data/events";
 import { isLocale, type Locale } from "@/data/types";
+import { usePrefersReducedMotion } from "@/lib/motion";
 import { ArrowUpRight } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useRef, type CSSProperties } from "react";
@@ -20,6 +21,7 @@ export function Events() {
   const loop = Array.from({ length: repeats }, () => events).flat();
   const marqueeStyle = { "--marquee-duration": `${loop.length * secondsPerCard}s` } as CSSProperties;
   const marqueeRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = usePrefersReducedMotion();
 
   useEffect(() => {
     const resume = () => {
@@ -45,7 +47,8 @@ export function Events() {
           className="events-marquee mt-6 md:mt-8"
           style={marqueeStyle}
           onBlur={(event) => {
-            if (!event.currentTarget.contains(event.relatedTarget as Node | null)) event.currentTarget.scrollLeft = 0;
+            if (reduceMotion || event.currentTarget.contains(event.relatedTarget as Node | null)) return;
+            event.currentTarget.scrollLeft = 0;
           }}
         >
           <div className="events-track flex w-max">
