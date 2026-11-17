@@ -1,69 +1,78 @@
 "use client";
 
-import { carouselCardClass, Carousel } from "@/components/carousel";
 import { SectionDecor } from "@/components/decor";
 import { Reveal } from "@/components/reveal";
 import { SafeImage } from "@/components/safe-image";
-import { courses, events } from "@/data/events";
-import { isLocale } from "@/data/types";
-import { isHttpUrl } from "@/lib/site";
-import { usePrefersReducedMotion } from "@/lib/motion";
-import { motion } from "motion/react";
+import { courses, events, type PortfolioEvent } from "@/data/events";
+import { isLocale, type Locale } from "@/data/types";
+import { ArrowUpRight } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
+import { useEffect, useRef, type CSSProperties } from "react";
+
+const minCardsPerLoop = 8;
+const secondsPerCard = 6;
 
 export function Events() {
   const t = useTranslations();
   const localeValue = useLocale();
   const locale = isLocale(localeValue) ? localeValue : "en";
-  const reduce = usePrefersReducedMotion();
+  const repeats = Math.max(1, Math.ceil(minCardsPerLoop / Math.max(events.length, 1)));
+  const loop = Array.from({ length: repeats }, () => events).flat();
+  const marqueeStyle = { "--marquee-duration": `${loop.length * secondsPerCard}s` } as CSSProperties;
+  const marqueeRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const resume = () => {
+      if (document.visibilityState !== "visible") return;
+      const active = document.activeElement;
+      if (active instanceof HTMLElement && marqueeRef.current?.contains(active)) active.blur();
+    };
+    document.addEventListener("visibilitychange", resume);
+    return () => document.removeEventListener("visibilitychange", resume);
+  }, []);
 
   return (
-    <section id="events" className="relative overflow-x-clip bg-sage py-16 md:py-24">
+    <section id="events" className="relative overflow-x-clip bg-sage pb-16 pt-10 md:pb-24">
       <SectionDecor variant="events" />
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
-        <Carousel
-          title={<h2 className="font-display text-4xl text-ink md:text-5xl">{t("sections.events")}</h2>}
-          label={t("events.carousel")}
-          previousLabel={t("events.previous")}
-          nextLabel={t("events.next")}
-          count={events.length}
+        <Reveal>
+          <h2 className="font-display text-4xl text-ink md:text-5xl">{t("sections.events")}</h2>
+        </Reveal>
+        <div
+          ref={marqueeRef}
+          role="region"
+          aria-label={t("events.carousel")}
+          className="events-marquee mt-6 md:mt-8"
+          style={marqueeStyle}
         >
-          {events.map((event) => (
-            <motion.article
-              key={event.slug}
-              data-card
-              className={`motion-fx flex flex-col items-center px-2 text-center ${carouselCardClass}`}
-              whileHover={reduce ? undefined : { y: -8, rotate: -1 }}
-              transition={{ type: "spring", stiffness: 260, damping: 18 }}
-            >
-              <div className="flex flex-col items-center">
-                <div className="relative h-72 w-48 overflow-hidden rounded-t-[999px] rounded-b-[28px] bg-white shadow-lg">
-                  <SafeImage src={event.image} alt={event.alt[locale]} sizes="200px" className="zoom-media object-cover" />
-                </div>
-                <span className="relative z-10 -mt-3 rounded-full bg-white px-3 py-1 text-xs font-semibold text-ink shadow-sm">
-                  {event.format === "virtual" ? t("events.virtual") : t("events.inPerson")}
-                </span>
-              </div>
-              <h3 className="mt-4 font-display text-2xl leading-tight">{event.name}</h3>
-              {event.place ? <p className="mt-2 text-ink-soft">{event.place}</p> : null}
-              <p className="text-ink-soft">{event.date[locale]}</p>
-              {event.organizer ? (
-                <p className="mt-2 text-sm leading-relaxed">{t("events.organizedBy", { name: event.organizer })}</p>
-              ) : null}
-              {event.note ? <p className="mt-1 text-sm leading-relaxed text-ink-soft">{event.note[locale]}</p> : null}
-              {isHttpUrl(event.thread) ? (
-                <a
-                  href={event.thread}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-4 inline-flex min-h-11 items-center rounded-full bg-ink px-5 py-2 font-display text-lg text-cream"
-                >
-                  {t("events.readThread")}
-                </a>
-              ) : null}
-            </motion.article>
-          ))}
-        </Carousel>
+          <div className="events-track flex w-max">
+            {[0, 1].map((copy) => (
+              <ul key={copy} className="flex shrink-0 gap-5 pr-5 md:gap-6 md:pr-6" aria-hidden={copy === 1 || undefined}>
+                {loop.map((event, index) => {
+                  const duplicate = copy === 1 || index >= events.length;
+                  const title = event.title[locale];
+                  return (
+                    <li
+                      key={`${event.slug}-${index}`}
+                      data-duplicate={duplicate || undefined}
+                      aria-hidden={duplicate || undefined}
+                      className="w-52 shrink-0 md:w-60"
+                    >
+                      <EventCard
+                        event={event}
+                        locale={locale}
+                        title={title}
+                        formatLabel={event.format === "virtual" ? t("events.virtual") : t("events.inPerson")}
+                        linkLabel={t("events.linkLabel", { title })}
+                        focusable={!duplicate}
+                      />
+                    </li>
+                  );
+                })}
+              </ul>
+            ))}
+          </div>
+        </div>
         <Reveal>
           <div className="mx-auto mt-14 max-w-4xl rounded-[28px] bg-white/70 px-5 py-6 sm:px-8">
             <h3 className="text-center font-display text-2xl">{t("events.courses")}</h3>
@@ -80,5 +89,56 @@ export function Events() {
         </Reveal>
       </div>
     </section>
+  );
+}
+
+function EventCard({
+  event,
+  locale,
+  title,
+  formatLabel,
+  linkLabel,
+  focusable,
+}: {
+  event: PortfolioEvent;
+  locale: Locale;
+  title: string;
+  formatLabel: string;
+  linkLabel: string;
+  focusable: boolean;
+}) {
+  return (
+    <a
+      href={event.link}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={linkLabel}
+      tabIndex={focusable ? undefined : -1}
+      onClick={(event) => event.currentTarget.blur()}
+      className="group flex h-full flex-col items-center rounded-[28px] text-center motion-safe:transition-transform motion-safe:duration-300 motion-safe:hover:-translate-y-1 motion-safe:focus-visible:-translate-y-1"
+    >
+      <div className="relative h-52 w-36 overflow-hidden rounded-t-[999px] rounded-b-[28px] bg-white shadow-lg transition-shadow duration-300 group-hover:shadow-2xl group-focus-visible:shadow-2xl md:h-60 md:w-44">
+        <SafeImage
+          src={event.image}
+          alt={event.alt[locale]}
+          sizes="(max-width: 768px) 144px, 176px"
+          className={`zoom-media ${
+            event.imageFit === "contain"
+              ? "bg-white object-contain p-6"
+              : `object-cover ${event.imagePosition ?? "object-center"}`
+          }`}
+        />
+        <span
+          aria-hidden="true"
+          className="absolute bottom-3 right-3 inline-flex h-7 w-7 items-center justify-center rounded-full bg-white/90 text-ink shadow-sm"
+        >
+          <ArrowUpRight className="h-4 w-4" />
+        </span>
+      </div>
+      <span className="relative z-10 -mt-3 rounded-full bg-white px-3 py-1 text-xs font-semibold text-ink shadow-sm">
+        {formatLabel}
+      </span>
+      <h3 className="mt-2 min-h-[2.5em] w-full font-display text-base leading-tight text-ink md:text-lg">{title}</h3>
+    </a>
   );
 }
