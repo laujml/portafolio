@@ -52,6 +52,8 @@
     "inPerson": "In person",
     "linkLabel": "View LinkedIn post: {title}",
     "carousel": "Event carousel",
+    "seeAll": "See all",
+    "seeLess": "See less",
     "courses": "Courses and certifications"
   },
   "writing": {
