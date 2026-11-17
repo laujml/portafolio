@@ -65,6 +65,48 @@ section[id] {
   animation: wave-drift 18s linear infinite;
 }
 
+@keyframes events-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.events-marquee {
+  overflow: hidden;
+  padding-block: 0.75rem;
+  mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
+}
+
+.events-track {
+  animation: events-marquee var(--marquee-duration, 48s) linear infinite;
+}
+
+.events-marquee:hover .events-track {
+  animation-play-state: paused;
+}
+
+.events-marquee:has(:focus-visible) .events-track {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .events-marquee {
+    overflow-x: auto;
+    mask-image: none;
+  }
+
+  .events-track {
+    animation: none;
+  }
+
+  .events-marquee [data-duplicate] {
+    display: none;
+  }
+}
+
 @keyframes spark-fade {
   to {
     opacity: 0;

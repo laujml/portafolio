@@ -48,12 +48,9 @@
     "inProgress": "In progress"
   },
   "events": {
-    "readThread": "Read my thread",
     "virtual": "Virtual",
     "inPerson": "In person",
-    "organizedBy": "Organized by {name}",
-    "previous": "Previous events",
-    "next": "Next events",
+    "linkLabel": "View LinkedIn post: {title}",
     "carousel": "Event carousel",
     "courses": "Courses and certifications"
   },
