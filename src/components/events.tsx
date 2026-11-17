@@ -44,6 +44,9 @@ export function Events() {
           aria-label={t("events.carousel")}
           className="events-marquee mt-6 md:mt-8"
           style={marqueeStyle}
+          onBlur={(event) => {
+            if (!event.currentTarget.contains(event.relatedTarget as Node | null)) event.currentTarget.scrollLeft = 0;
+          }}
         >
           <div className="events-track flex w-max">
             {[0, 1].map((copy) => (
@@ -115,6 +118,11 @@ function EventCard({
       aria-label={linkLabel}
       tabIndex={focusable ? undefined : -1}
       onClick={(event) => event.currentTarget.blur()}
+      onFocus={(event) => {
+        if (event.currentTarget.matches(":focus-visible")) {
+          event.currentTarget.scrollIntoView({ block: "nearest", inline: "nearest" });
+        }
+      }}
       className="group flex h-full flex-col items-center rounded-[28px] text-center motion-safe:transition-transform motion-safe:duration-300 motion-safe:hover:-translate-y-1 motion-safe:focus-visible:-translate-y-1"
     >
       <div className="relative h-52 w-36 overflow-hidden rounded-t-[999px] rounded-b-[28px] bg-white shadow-lg transition-shadow duration-300 group-hover:shadow-2xl group-focus-visible:shadow-2xl md:h-60 md:w-44">
