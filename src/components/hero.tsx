@@ -1,14 +1,13 @@
 "use client";
 
-import { Heart, SectionDecor, Star } from "@/components/decor";
+import { SectionDecor } from "@/components/decor";
 import { profile } from "@/data/profile";
 import { isLocale } from "@/data/types";
 import { usePrefersReducedMotion } from "@/lib/motion";
 import { motion } from "motion/react";
 import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
-import type { ReactNode } from "react";
-import avatar from "../../public/images/avatar.png";
+import heroPhoto from "../../public/hero-lau-foto.png";
 
 export function Hero() {
   const t = useTranslations("hero");
@@ -65,44 +64,15 @@ export function Hero() {
             transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
           >
             <Image
-              src={avatar}
+              src={heroPhoto}
               alt={profile.portraitAlt[locale]}
               priority
               sizes="(max-width: 1024px) 90vw, 460px"
-              className="h-auto w-full mix-blend-multiply"
+              className="h-auto w-full"
             />
-            <Twinkle className="-left-1 top-6 h-6 w-6 text-pink" delay={0}>
-              <Star className="h-full w-full" />
-            </Twinkle>
-            <Twinkle className="-right-1 top-2 h-5 w-5 text-butter" delay={0.5}>
-              <Star className="h-full w-full" />
-            </Twinkle>
-            <Twinkle className="bottom-8 -left-1 h-5 w-5 text-lilac" delay={0.9}>
-              <Heart className="h-full w-full" />
-            </Twinkle>
-            <Twinkle className="-right-2 bottom-6 h-6 w-6 text-pink" delay={1.2}>
-              <Heart className="h-full w-full" />
-            </Twinkle>
-            <Twinkle className="left-1/2 -top-2 h-4 w-4 -translate-x-1/2 text-lilac" delay={0.3}>
-              <Star className="h-full w-full" />
-            </Twinkle>
           </motion.div>
         </motion.div>
       </div>
     </section>
-  );
-}
-
-function Twinkle({ className, delay, children }: { className: string; delay: number; children: ReactNode }) {
-  const reduce = usePrefersReducedMotion();
-  return (
-    <motion.span
-      aria-hidden="true"
-      className={`motion-fx pointer-events-none absolute ${className}`}
-      animate={reduce ? undefined : { opacity: [0.4, 1, 0.4], y: [0, -6, 0] }}
-      transition={{ duration: 3.2, repeat: Infinity, delay, ease: "easeInOut" }}
-    >
-      {children}
-    </motion.span>
   );
 }
