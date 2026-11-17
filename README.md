@@ -51,11 +51,11 @@ El texto alternativo de la ilustración está en `src/data/profile.ts` (`portrai
 
 Si una imagen no existe, la tarjeta muestra una flor y no se rompe el diseño.
 
-## Despliegue en Vercel
+## Deploy
 
-1. Sube el repositorio a GitHub.
-2. En Vercel, importa el proyecto. El framework es Next.js.
-3. Define la variable `NEXT_PUBLIC_SITE_URL` con la URL pública, por ejemplo `https://tu-dominio.vercel.app`.
-4. Deploy.
+1. Los cambios se trabajan en una rama aparte, nunca directo en `main`.
+2. Se abre un pull request hacia `main`.
+3. El CI de GitHub Actions (`.github/workflows/ci.yml`) corre `npm run lint` y `npm run build`.
+4. Al hacer merge, Vercel despliega automáticamente a producción en [https://laubuilds.work](https://laubuilds.work).
 
-Esa variable alimenta el sitemap, `robots.txt` y Open Graph. Sin ella, el build usa `http://localhost:3000`.
+En Vercel, la variable `NEXT_PUBLIC_SITE_URL` debe ser `https://laubuilds.work`. Alimenta el sitemap, `robots.txt` y Open Graph. Sin ella, el build usa `http://localhost:3000`.
