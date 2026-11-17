@@ -86,8 +86,8 @@ export const events: PortfolioEvent[] = [
     image: "/events/cuenta-regresiva-forense.jpg",
     imagePosition: "object-[center_40%]",
     alt: {
-      en: "Navy and mint illustration of a magnifying glass over a fingerprint turning into a circuit, surrounded by icons for data, crypto, auditing and digital fraud",
-      es: "Ilustración en azul marino y menta de una lupa sobre una huella digital que se convierte en circuito, rodeada de íconos de datos, cripto, auditoría y fraude digital",
+      en: "Navy and mint illustration of a magnifying glass over a fingerprint that turns into a circuit",
+      es: "Ilustración en azul marino y menta de una lupa sobre una huella que se convierte en circuito",
     },
     link: "https://www.linkedin.com/feed/update/urn:li:activity:7511248416958464001/",
   },

@@ -66,7 +66,7 @@ export function Events() {
         </Reveal>
         <div id={listId} className="mt-6 md:mt-8">
           {showGrid ? (
-            <ul className="grid grid-cols-2 gap-x-4 gap-y-8 py-3 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-5">
+            <ul className="grid grid-cols-2 gap-x-4 gap-y-8 py-3 md:grid-cols-3 md:gap-x-6 lg:grid-cols-5">
               {events.map((event) => (
                 <li key={event.slug}>
                   <EventCard {...cardProps(event)} focusable compact />

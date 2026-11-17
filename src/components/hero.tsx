@@ -1,6 +1,5 @@
 "use client";
 
-import { SectionDecor } from "@/components/decor";
 import { profile } from "@/data/profile";
 import { isLocale } from "@/data/types";
 import { usePrefersReducedMotion } from "@/lib/motion";
@@ -26,7 +25,6 @@ export function Hero() {
 
   return (
     <section className="relative overflow-x-clip bg-cream pb-16 pt-28 md:pb-24 md:pt-36">
-      <SectionDecor variant="hero" />
       <div className="mx-auto grid max-w-6xl items-center gap-8 px-5 sm:px-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12">
         <motion.div className="order-2 lg:order-1" initial="hidden" animate="show" variants={container}>
           <motion.h1 variants={item} className="motion-fx font-display text-5xl leading-none text-ink sm:text-6xl lg:text-7xl">
