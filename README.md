@@ -41,7 +41,7 @@ Añade un objeto en `src/data/writing.ts` con `slug`, `title` (`{ en, es }`) y `
 
 | Archivo | Qué es |
 | --- | --- |
-| `public/images/avatar.png` | Ilustración del hero, cuadrada, con su propio fondo crema. |
+| `public/hero-lau-foto.png` | Foto del hero, cuadrada, con fondo transparente y el círculo y los adornos ya dibujados. |
 | `public/cv/Laura-Angel-CV-en.pdf` | CV en inglés |
 | `public/cv/Laura-Angel-CV-es.pdf` | CV en español |
 | `public/projects/<slug>/` | Portada, capturas, póster y video |

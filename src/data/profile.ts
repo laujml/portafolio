@@ -13,7 +13,7 @@ export const profile = {
     es: "Desarrolladora full-stack y estudiante de ingeniería de software en El Salvador.",
   } satisfies Localized,
   portraitAlt: {
-    en: "Illustration of Lau winking and making a peace sign",
-    es: "Ilustración de Lau guiñando un ojo y haciendo la señal de paz",
+    en: "Photo of Lau smiling, wearing glasses and a navy blazer",
+    es: "Foto de Lau sonriendo, con lentes y blazer azul marino",
   } satisfies Localized,
 };

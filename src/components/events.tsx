@@ -8,7 +8,7 @@ import { isLocale, type Locale } from "@/data/types";
 import { usePrefersReducedMotion } from "@/lib/motion";
 import { ArrowUpRight } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { useEffect, useRef, type CSSProperties } from "react";
+import { useEffect, useId, useRef, useState, type CSSProperties } from "react";
 
 const minCardsPerLoop = 8;
 const secondsPerCard = 6;
@@ -20,8 +20,12 @@ export function Events() {
   const repeats = Math.max(1, Math.ceil(minCardsPerLoop / Math.max(events.length, 1)));
   const loop = Array.from({ length: repeats }, () => events).flat();
   const marqueeStyle = { "--marquee-duration": `${loop.length * secondsPerCard}s` } as CSSProperties;
+  const sectionRef = useRef<HTMLElement>(null);
   const marqueeRef = useRef<HTMLDivElement>(null);
+  const listId = useId();
   const reduceMotion = usePrefersReducedMotion();
+  const [expanded, setExpanded] = useState(false);
+  const showGrid = reduceMotion || expanded;
 
   useEffect(() => {
     const resume = () => {
@@ -33,52 +37,89 @@ export function Events() {
     return () => document.removeEventListener("visibilitychange", resume);
   }, []);
 
+  const toggle = () => {
+    if (!expanded) {
+      setExpanded(true);
+      return;
+    }
+    setExpanded(false);
+    sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const cardProps = (event: PortfolioEvent) => {
+    const title = event.title[locale];
+    return {
+      event,
+      locale,
+      title,
+      formatLabel: event.format === "virtual" ? t("events.virtual") : t("events.inPerson"),
+      linkLabel: t("events.linkLabel", { title }),
+    };
+  };
+
   return (
-    <section id="events" className="relative overflow-x-clip bg-sage pb-16 pt-10 md:pb-24">
+    <section ref={sectionRef} id="events" className="relative overflow-x-clip bg-sage pb-16 pt-10 md:pb-24">
       <SectionDecor variant="events" />
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
         <Reveal>
           <h2 className="font-display text-4xl text-ink md:text-5xl">{t("sections.events")}</h2>
         </Reveal>
-        <div
-          ref={marqueeRef}
-          role="region"
-          aria-label={t("events.carousel")}
-          className="events-marquee mt-6 md:mt-8"
-          style={marqueeStyle}
-          onBlur={(event) => {
-            if (reduceMotion || event.currentTarget.contains(event.relatedTarget as Node | null)) return;
-            event.currentTarget.scrollLeft = 0;
-          }}
-        >
-          <div className="events-track flex w-max">
-            {[0, 1].map((copy) => (
-              <ul key={copy} className="flex shrink-0 gap-5 pr-5 md:gap-6 md:pr-6" aria-hidden={copy === 1 || undefined}>
-                {loop.map((event, index) => {
-                  const duplicate = copy === 1 || index >= events.length;
-                  const title = event.title[locale];
-                  return (
-                    <li
-                      key={`${event.slug}-${index}`}
-                      data-duplicate={duplicate || undefined}
-                      aria-hidden={duplicate || undefined}
-                      className="w-52 shrink-0 md:w-60"
-                    >
-                      <EventCard
-                        event={event}
-                        locale={locale}
-                        title={title}
-                        formatLabel={event.format === "virtual" ? t("events.virtual") : t("events.inPerson")}
-                        linkLabel={t("events.linkLabel", { title })}
-                        focusable={!duplicate}
-                      />
-                    </li>
-                  );
-                })}
-              </ul>
-            ))}
-          </div>
+        <div id={listId} className="mt-6 md:mt-8">
+          {showGrid ? (
+            <ul className="grid grid-cols-2 gap-x-4 gap-y-8 py-3 md:grid-cols-3 md:gap-x-6 lg:grid-cols-5">
+              {events.map((event) => (
+                <li key={event.slug}>
+                  <EventCard {...cardProps(event)} focusable compact />
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div
+              ref={marqueeRef}
+              role="region"
+              aria-label={t("events.carousel")}
+              className="events-marquee"
+              style={marqueeStyle}
+              onBlur={(event) => {
+                if (reduceMotion || event.currentTarget.contains(event.relatedTarget as Node | null)) return;
+                event.currentTarget.scrollLeft = 0;
+              }}
+            >
+              <div className="events-track flex w-max">
+                {[0, 1].map((copy) => (
+                  <ul key={copy} className="flex shrink-0 gap-5 pr-5 md:gap-6 md:pr-6" aria-hidden={copy === 1 || undefined}>
+                    {loop.map((event, index) => {
+                      const duplicate = copy === 1 || index >= events.length;
+                      return (
+                        <li
+                          key={`${event.slug}-${index}`}
+                          data-duplicate={duplicate || undefined}
+                          aria-hidden={duplicate || undefined}
+                          className="w-52 shrink-0 md:w-60"
+                        >
+                          <EventCard {...cardProps(event)} focusable={!duplicate} />
+                        </li>
+                      );
+                    })}
+                  </ul>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
+        {reduceMotion ? null : (
+          <div className="mt-6 flex justify-center">
+            <button
+              type="button"
+              aria-expanded={expanded}
+              aria-controls={listId}
+              onClick={toggle}
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-ink px-6 py-2 font-display text-lg text-cream"
+            >
+              {expanded ? t("events.seeLess") : t("events.seeAll")}
+            </button>
+          </div>
+        )}
         <Reveal>
           <div className="mx-auto mt-14 max-w-4xl rounded-[28px] bg-white/70 px-5 py-6 sm:px-8">
             <h3 className="text-center font-display text-2xl">{t("events.courses")}</h3>
@@ -105,6 +146,7 @@ function EventCard({
   formatLabel,
   linkLabel,
   focusable,
+  compact = false,
 }: {
   event: PortfolioEvent;
   locale: Locale;
@@ -112,6 +154,7 @@ function EventCard({
   formatLabel: string;
   linkLabel: string;
   focusable: boolean;
+  compact?: boolean;
 }) {
   return (
     <a
@@ -120,10 +163,10 @@ function EventCard({
       rel="noopener noreferrer"
       aria-label={linkLabel}
       tabIndex={focusable ? undefined : -1}
-      onClick={(event) => event.currentTarget.blur()}
-      onFocus={(event) => {
-        if (event.currentTarget.matches(":focus-visible")) {
-          event.currentTarget.scrollIntoView({ block: "nearest", inline: "nearest" });
+      onClick={(clickEvent) => clickEvent.currentTarget.blur()}
+      onFocus={(focusEvent) => {
+        if (focusEvent.currentTarget.matches(":focus-visible")) {
+          focusEvent.currentTarget.scrollIntoView({ block: "nearest", inline: "nearest" });
         }
       }}
       className="group flex h-full flex-col items-center rounded-[28px] text-center motion-safe:transition-transform motion-safe:duration-300 motion-safe:hover:-translate-y-1 motion-safe:focus-visible:-translate-y-1"
@@ -149,7 +192,13 @@ function EventCard({
       <span className="relative z-10 -mt-3 rounded-full bg-white px-3 py-1 text-xs font-semibold text-ink shadow-sm">
         {formatLabel}
       </span>
-      <h3 className="mt-2 min-h-[2.5em] w-full font-display text-base leading-tight text-ink md:text-lg">{title}</h3>
+      <h3
+        className={`mt-2 min-h-[2.5em] w-full font-display leading-tight text-ink ${
+          compact ? "text-sm sm:text-base" : "text-base md:text-lg"
+        }`}
+      >
+        {title}
+      </h3>
     </a>
   );
 }
