@@ -87,13 +87,13 @@ export function SectionDecor({
   if (variant === "hero") {
     return (
       <>
-        <Float className="left-[6%] top-24 h-14 w-14 text-butter" delay={0.2}>
+        <Float className="hidden md:block left-[6%] top-24 h-14 w-14 text-butter" delay={0.2}>
           <Star className="h-full w-full text-butter" />
         </Float>
-        <Float className="right-[8%] top-28 h-10 w-10" delay={1.1} distance={16}>
+        <Float className="hidden md:block right-[8%] top-28 h-10 w-10" delay={1.1} distance={16}>
           <Flower className="h-full w-full" />
         </Float>
-        <Float className="bottom-10 left-[18%] h-16 w-16" delay={0.6}>
+        <Float className="hidden md:block bottom-10 left-[18%] h-16 w-16" delay={0.6}>
           <Flower className="h-full w-full" />
         </Float>
       </>
@@ -129,10 +129,10 @@ export function SectionDecor({
 
   return (
     <>
-      <Float className={pieces[0]} delay={0.3}>
+      <Float className={`hidden md:block ${pieces[0]}`} delay={0.3}>
         <Flower className="h-full w-full" />
       </Float>
-      <Float className={pieces[1]} delay={1.4} distance={14}>
+      <Float className={`hidden md:block ${pieces[1]}`} delay={1.4} distance={14}>
         <Star className="h-full w-full text-butter" />
       </Float>
     </>
